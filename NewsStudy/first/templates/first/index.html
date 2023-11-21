@@ -1,0 +1,19 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% block title %} Портал новостей {% endblock %}
+
+{% block content %}
+    {% if request.path == '/' %}
+        {% include 'first/mainpage.html' %}
+    {% elif request.path == '/news/' %}
+        {% include 'first/news_list.html' %}
+    {% elif request.path == '/news-add/' %}
+        {% include 'first/news_add.html' %}
+    {% elif request.path == '/user/' %}
+        {% include 'first/user.html' %}
+    {% else %}
+        <div class="alert alert-danger page-header text-center">
+            <h1><strong>Ошибка 404:</strong> страница не найдена</h1>
+        </div>
+    {% endif %}
+{% endblock %}
