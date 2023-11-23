@@ -1,0 +1,10 @@
+На проверку
+
+Python 3.9
+Django 4.2.7
+
+
+pip install requirements.txt
+
+cd .\NewsStudy\
+python .\manage.py runserver --insecure (DEBUG=False)
