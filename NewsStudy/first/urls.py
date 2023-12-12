@@ -18,8 +18,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('news/', views.index, name='news'),
-    path('user/', views.index, name='user'),
-    path('news-add/', views.index, name='news-add'),
+    path('', views.index, name='home_index'),
 ]

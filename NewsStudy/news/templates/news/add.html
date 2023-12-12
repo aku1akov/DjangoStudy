@@ -1,0 +1,23 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} Портал новостей {% endblock %}
+
+{% block content %}
+<div class="page-header text-center">
+    <h1>Добавить новость</h1>
+</div>
+<div class="col-10 offset-1">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.title|as_crispy_field }}
+        {{ form.anouncement|as_crispy_field }}
+        {{ form.text|as_crispy_field }}
+        {{ form.tags|as_crispy_field }}
+        <div class="text-center">
+            <input type="submit" class="btn btn-success" value="Опубликовать">
+        </div>
+    </form>
+</div>
+{% endblock %}
+

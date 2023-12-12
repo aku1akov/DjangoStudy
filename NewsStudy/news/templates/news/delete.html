@@ -1,0 +1,19 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} Портал новостей {% endblock %}
+
+{% block content %}
+<div class="page-header text-center">
+    <h1>Удалить новость</h1>
+</div>
+<div class="col-10 offset-1">
+    <h2>Удалить {{ article.title }}?</h2>
+<form method="post">
+    {% csrf_token %}
+    <a class="btn btn-default" href="{% url 'news_index' %}">Отмена</a>
+    <input type="submit" class="btn btn-danger" value="Удалить">
+</form>
+</div>
+{% endblock %}
+

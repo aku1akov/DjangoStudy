@@ -3,17 +3,19 @@
 {% block title %} Портал новостей {% endblock %}
 
 {% block content %}
-    {% if request.path == '/' %}
-        {% include 'first/mainpage.html' %}
-    {% elif request.path == '/news/' %}
-        {% include 'first/news_list.html' %}
-    {% elif request.path == '/news-add/' %}
-        {% include 'first/news_add.html' %}
-    {% elif request.path == '/user/' %}
-        {% include 'first/user.html' %}
-    {% else %}
-        <div class="alert alert-danger page-header text-center">
-            <h1><strong>Ошибка 404:</strong> страница не найдена</h1>
-        </div>
-    {% endif %}
+        {% include 'first/home.html' %}
+<!--    {% if request.resolver_match.view_name == 'home' %}-->
+<!--        {% include 'first/home.html' %}-->
+<!--    {% elif request.resolver_match.view_name == 'list-news' %}-->
+<!--        {% include 'news/news.html' %}-->
+<!--    {% elif request.resolver_match.view_name == 'add-news' %}-->
+<!--        {% include 'news/news_add.html' %}-->
+<!--    {% elif request.resolver_match.view_name == 'user' %}-->
+<!--        {% include 'first/user.html' %}-->
+<!--    {% else %}-->
+<!--        <div class="alert alert-danger page-header text-center">-->
+<!--            <h1><strong>Ошибка 404:</strong> страница не найдена</h1>-->
+<!--        </div>-->
+<!--    {% endif %}-->
 {% endblock %}
+

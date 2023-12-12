@@ -1,0 +1,43 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% block title %} Портал новостей {% endblock %}
+
+{% block content %}
+    <div class="page-header text-center">
+        <h1>Все новости списком</h1>
+    </div>
+    <div class="offset-1 col-10">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search_input" placeholder="Быстрый поиск по новостям...">
+            <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                </span>
+        </div>
+    </div>
+
+<!--    <h4><small>Последние новости</small></h4>-->
+
+    {% for article in articles %}
+        <h3>{{ article.title }} </h3>
+        <p> {{ article.anouncement }} </p>
+        <h6><a href="{{ article.get_detail_url }}"> Читать полностью... </a></h6>
+
+        {% for tag in article.tags.all %}
+            <td><span class="label label-success">{{ tag.title }}</span></td>
+        {% endfor %}
+
+
+        <h6>
+            <td><span class="glyphicon glyphicon-time"></span> Опубликовал(а) {{ article.author }} {{ article.date }}.</td>
+        </h6>
+
+<!--        <td>Просмотры <span class="badge">100</span></td><br>-->
+<!--        <td>Комментарии <span class="badge"> {{ comments.count }} </span></td>-->
+
+        <hr>
+    {% endfor %}
+
+{% endblock %}
+

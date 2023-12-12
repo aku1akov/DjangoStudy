@@ -14,23 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from . import settings
-import first.views as f_views
-import debug_toolbar
-
-handler404 = f_views.custom_404
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('first.urls')),
-    path('news/', include('news.urls')),
-    path('users/', include('users.urls')),
-    path('store/', include('store.urls')),
+    path('', views.news_index, name='news_index'),
+    path('user', views.news_user, name='news_user'),
+    path('add', views.news_add, name='news_add'),
+    path('detail/<int:id>', views.news_detail, name='news_detail'),
+    path('search_auto/', views.search_auto, name='search_auto'),
+    path('<int:pk>/detail', views.ArticleDetailView.as_view(), name='detail_view'),
+    path('update/<int:pk>', views.ArticleUpdateView.as_view(), name='news_update'),
+    path('delete/<int:pk>', views.ArticleDeleteView.as_view(), name='news_delete'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        path('__debug/__', include(debug_toolbar.urls)),
-    ]

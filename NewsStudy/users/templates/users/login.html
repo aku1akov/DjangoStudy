@@ -1,0 +1,29 @@
+{% extends 'first/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} Портал новостей {% endblock %}
+
+{% block content %}
+
+<div class="page-header text-center">
+    <h1> Вход в аккаунт</h1>
+</div>
+
+<div class="row">
+    <div class="text-start offset-2 col-8">
+        <form method="post" class="contact-form">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-center">
+                <input class="btn btn-success" type="submit" value="Войти">
+            </div>
+        </form><br>
+        <div class="row">
+            <div class="text-center">
+                <a href="{% url 'register' %}">У меня нет аккаунта</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
