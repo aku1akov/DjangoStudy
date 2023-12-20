@@ -12,7 +12,9 @@
 <div>
     <div class="row">
         <div class="col-6 text-start">
-            <h5><span class="glyphicon glyphicon-time"></span> Опубликовал(а) {{ article.author }} {{ article.date }}.
+            <h5>
+                {% comment %} {{ article.author.profile.nickname }} {% endcomment %}
+                <span class="glyphicon glyphicon-time"></span> Опубликовал(а) {{ article.author }} {{ article.date }}.
             </h5>
         </div>
         <div class="col-6 text-end">
@@ -56,6 +58,7 @@
             {% for comment in comments %}
             <h4> {{ comment.author }} <small> {{ comment.date }} </small></h4>
             <p> {{ comment.text }} </p>
+
             <br>
             {% endfor %}
         </div>

@@ -42,7 +42,7 @@ def register(request):
             login = form.cleaned_data.get('username')
             pwd = form.cleaned_data.get('password')
             messages.success(request, f'Пользователь {login} зарегистрирован!')
-            # authenticate(username=login, password=pwd)
+            authenticate(username=login, password=pwd)
             return redirect('login')
     else:
         form = UserCreationForm(request.POST)

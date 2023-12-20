@@ -21,13 +21,13 @@ class Article(models.Model):
                   ('Sc', 'Science'),
                   ('IT', 'IT'))
 
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Автор')
     title = models.CharField('Название', max_length=50, default='')
     anouncement = models.TextField('Аннотация', max_length=250)
     text = models.TextField('Текст новости')
     date = models.DateTimeField('Дата создания', auto_now=True)
     category = models.CharField(choices=categories, max_length=20, verbose_name='Категории')
-    tags = models.ManyToManyField(to=Tag, blank=True)
+    tags = models.ManyToManyField(verbose_name='Тэги', to=Tag, blank=True)
 
     def __str__(self):
         return f'{self.title} от {self.date}'
@@ -43,7 +43,7 @@ class Article(models.Model):
 
     def tag_list(self):
         s = ''
-        for t in self.tags.all():
+        for t in self.tags:
             s += t.title + ' '
         return s
 

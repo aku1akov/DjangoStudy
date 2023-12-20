@@ -25,7 +25,7 @@ class ArticleDeleteView(DeleteView):
     template_name = 'news/delete.html'
 
 
-@login_required(login_url='users_index')
+@login_required(login_url='login')
 def news_add(request):
     if request.method == 'POST':
         form = ArticleForm(request.POST)
@@ -42,30 +42,32 @@ def news_add(request):
 
 def news_index(request):
     articles = Article.objects.all().order_by('-date')
-    comments = Comment.objects.all()
+    # comments = Comment.objects.all()
     # for a in articles:
     #     print(a.title, a.tags.all())
     # articles2 = Article.objects.filter(author=request.user.id)
     # print('Автор новости', article.title, ':', article.author.account.gender)
     context = {'articles': articles,
-               'comments': comments}
+               # 'comments': comments
+               }
     return render(request, 'news/index.html', context)
 
 
 def news_user(request):
     articles = Article.objects.filter(author=request.user).order_by('-date')
-    comments = Comment.objects.all()
+    # comments = Comment.objects.all()
     # for a in articles:
     #     print(a.title, a.tags.all())
     # articles2 = Article.objects.filter(author=request.user.id)
     # print('Автор новости', article.title, ':', article.author.account.gender)
     context = {'articles': articles,
-               'comments': comments}
+               # 'comments': comments
+               }
     return render(request, 'news/index.html', context)
 
 
 def news_detail(request, id):
-    article = Article.objects.filter(id=id).first()
+    article = Article.objects.get(id=id)
     comments = Comment.objects.filter(article=article).order_by('-date')
     context = {'article': article,
                'comments': comments}
