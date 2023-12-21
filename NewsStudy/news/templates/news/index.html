@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="page-header text-center">
-        <h1>Все новости списком</h1>
+        <h1> {{ title }} </h1>
     </div>
     <div class="offset-1 col-10">
         <div class="input-group">
@@ -22,7 +22,7 @@
     {% for article in articles %}
         <h3>{{ article.title }} </h3>
         <p> {{ article.anouncement }} </p>
-        <h6><a href="{{ article.get_detail_url }}"> Читать полностью... </a></h6>
+        <h6><a href="{{ article.get_absolute_url }}"> Читать полностью... </a></h6>
 
         {% for tag in article.tags.all %}
             <td><span class="label label-success">{{ tag.title }}</span></td>
@@ -33,8 +33,8 @@
             <td><span class="glyphicon glyphicon-time"></span> Опубликовал(а) {{ article.author }} {{ article.date }}.</td>
         </h6>
 
-<!--        <td>Просмотры <span class="badge">100</span></td><br>-->
-<!--        <td>Комментарии <span class="badge"> {{ comments.count }} </span></td>-->
+        <td>Просмотров <span class="badge"> {{ article.tags__count }} </span></td><br>
+        <td>Комментариев <span class="badge"> {{ article.comment__count }} </span></td>
 
         <hr>
     {% endfor %}

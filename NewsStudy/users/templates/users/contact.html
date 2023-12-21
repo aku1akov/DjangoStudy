@@ -4,10 +4,16 @@
 {% block title %} Портал новостей {% endblock %}
 
 {% block content %}
-    <form method="post" class="text-center">
+
+<div class="page-header text-center">
+    <h1> Форма обратной связи </h1>
+</div>
+<div class="row">
+    <form method="post" class="text-center control-form">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Отправить">
+        <input type="submit" class="btn btn-success" value="Отправить">
     </form>
+</div>
 {% endblock %}
 

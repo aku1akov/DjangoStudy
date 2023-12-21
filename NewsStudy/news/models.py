@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 # Create your models here.
+
+
+class Today(models.Manager):
+    def get_queryset(self):
+        return super(Today, self).get_queryset().filter(date__gte=date.today())
 
 
 class Tag(models.Model):
@@ -29,10 +35,13 @@ class Article(models.Model):
     category = models.CharField(choices=categories, max_length=20, verbose_name='Категории')
     tags = models.ManyToManyField(verbose_name='Тэги', to=Tag, blank=True)
 
+    objects = models.Manager()
+    today = Today()
+
     def __str__(self):
         return f'{self.title} от {self.date}'
 
-    def get_detail_url(self):
+    def get_absolute_url(self):
         return f'/news/detail/{self.pk}'
 
     def get_update_url(self):
