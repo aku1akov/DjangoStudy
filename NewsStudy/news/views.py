@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
+from django.urls import reverse, reverse_lazy
 from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
@@ -24,7 +25,7 @@ class ArticleUpdateView(UpdateView):
 
 class ArticleDeleteView(DeleteView):
     model = Article
-    success_url = '/news'
+    success_url = reverse_lazy('news_index')
     template_name = 'news/delete.html'
 
 

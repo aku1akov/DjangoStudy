@@ -22,7 +22,7 @@
     {% for article in articles %}
         <h3>{{ article.title }} </h3>
         <p> {{ article.anouncement }} </p>
-        <h6><a href="{{ article.get_absolute_url }}"> Читать полностью... </a></h6>
+        <h6><a href="{% url 'news_detail' article.pk %}"> Читать полностью... </a></h6>
 
         {% for tag in article.tags.all %}
             <td><span class="label label-success">{{ tag.title }}</span></td>

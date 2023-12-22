@@ -20,10 +20,10 @@
         <div class="col-6 text-end">
             {% if request.user == article.author %}
             <td>
-                <a href="{{ article.get_update_url }}"><i class="glyphicon glyphicon-pencil"></i></a>
+                <a href="{% url 'news_update' article.pk %}"><i class="glyphicon glyphicon-pencil"></i></a>
             </td>
             <td>
-                <a href="{{ article.get_delete_url }}"><i class="glyphicon glyphicon-remove"></i></a>
+                <a href="{% url 'news_delete' article.pk %}"><i class="glyphicon glyphicon-remove"></i></a>
             </td>
             {% endif %}
         </div>

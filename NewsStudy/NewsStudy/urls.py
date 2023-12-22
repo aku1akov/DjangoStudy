@@ -35,3 +35,6 @@ if settings.DEBUG:
     urlpatterns += [
         path('__debug/__', include(debug_toolbar.urls)),
     ]
+
+admin.site.site_header = 'Панель администрирования'
+admin.site.index_title = 'Портал новостей'

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 from datetime import date
 # Create your models here.
 
@@ -34,6 +35,7 @@ class Article(models.Model):
     date = models.DateTimeField('Дата создания', auto_now=True)
     category = models.CharField(choices=categories, max_length=20, verbose_name='Категории')
     tags = models.ManyToManyField(verbose_name='Тэги', to=Tag, blank=True)
+    slug = models.SlugField()
 
     objects = models.Manager()
     today = Today()
@@ -44,11 +46,11 @@ class Article(models.Model):
     def get_absolute_url(self):
         return f'/news/detail/{self.pk}'
 
-    def get_update_url(self):
-        return f'/news/update/{self.pk}'
-
-    def get_delete_url(self):
-        return f'/news/delete/{self.pk}'
+    # def get_update_url(self):
+    #     return f'/news/update/{self.pk}'
+    #
+    # def get_delete_url(self):
+    #     return f'/news/delete/{self.pk}'
 
     def tag_list(self):
         s = ''
@@ -76,3 +78,14 @@ class Comment(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
+
+class Image(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50, blank=True)
+    image = models.ImageField(upload_to='news_img')
+
+    def __str__(self):
+        return self.title
+
+    def image_tag(self):
+        return mark_safe(f'<img src="{self.image.url}" height="50px" width="auto"/>')
