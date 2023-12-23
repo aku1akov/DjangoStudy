@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.db.models import Count
 from datetime import date
 # Create your models here.
 
@@ -17,6 +19,10 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+    @admin.display(description='Количество новостей')
+    def tag_count(self):
+        return Article.objects.filter(tags=self).count()
+
     class Meta:
         ordering = ['title', 'status']
         verbose_name = 'Тэг'
@@ -29,7 +35,7 @@ class Article(models.Model):
                   ('IT', 'IT'))
 
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='Автор')
-    title = models.CharField('Название', max_length=50, default='')
+    title = models.CharField('Заголовок', max_length=50, default='')
     anouncement = models.TextField('Аннотация', max_length=250)
     text = models.TextField('Текст новости')
     date = models.DateTimeField('Дата создания', auto_now=True)
@@ -54,9 +60,16 @@ class Article(models.Model):
 
     def tag_list(self):
         s = ''
-        for t in self.tags:
+        for t in self.tags.all():
             s += t.title + ' '
         return s
+
+    def image_tag(self):
+        image = Image.objects.filter(article=self).first()
+        if image:
+            return mark_safe(f'<img src="{image.image.url}" height="50px" width="auto"/>')
+        else:
+            return f'no image'
 
     class Meta:
         ordering = ['title', 'date']
@@ -81,11 +94,16 @@ class Comment(models.Model):
 
 class Image(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, blank=True)
-    image = models.ImageField(upload_to='news_img')
+    title = models.CharField(max_length=50, blank=True, verbose_name='Название')
+    image = models.ImageField(upload_to='news_img', verbose_name='Изображение')
 
     def __str__(self):
         return self.title
 
     def image_tag(self):
         return mark_safe(f'<img src="{self.image.url}" height="50px" width="auto"/>')
+
+    class Meta:
+        ordering = ['article', 'title']
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'

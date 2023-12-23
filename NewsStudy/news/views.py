@@ -16,6 +16,15 @@ class ArticleDetailView(DetailView):
     template_name = 'news/news.html'
     context_object_name = 'article'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cur_obj = self.object
+        comments = Comment.objects.filter(article=cur_obj).order_by('-date')
+        images = Image.objects.filter(article=cur_obj)
+        context['images'] = images
+        context['comments'] = comments
+        return context
+
 
 class ArticleUpdateView(UpdateView):
     model = Article
@@ -32,12 +41,14 @@ class ArticleDeleteView(DeleteView):
 @login_required(login_url='login')
 def news_add(request):
     if request.method == 'POST':
-        form = ArticleForm(request.POST)
+        form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
             article = form.save(commit=False)
             article.author = request.user
             article.save()
             form.save_m2m()
+            for image in request.FILES.getlist('image_field'):
+                Image.objects.create(article=article, image=image, title=image.name)
             return redirect('news_index')
     else:
         form = ArticleForm()
@@ -69,8 +80,10 @@ def news_user(request):
 def news_detail(request, id):
     article = Article.objects.select_related('author').get(id=id)
     comments = Comment.objects.select_related('author').filter(article=article).order_by('-date')
+    images = Image.objects.filter(article=article)
     context = {'article': article,
-               'comments': comments}
+               'comments': comments,
+               'images': images}
     if request.method == 'POST':
         if request.user.id:
             comment = Comment()
@@ -78,7 +91,7 @@ def news_detail(request, id):
             comment.author = request.user
             comment.text = request.POST.get('text')
             comment.save()
-            return redirect(article.get_detail_url())
+            return redirect('news_detail', id)
         else:
             return redirect('users_index')
     return render(request, 'news/news.html', context)
