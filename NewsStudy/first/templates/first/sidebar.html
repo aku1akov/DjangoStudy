@@ -12,23 +12,7 @@
             <i class="glyphicon glyphicon-list"></i>
             Все новости</a>
     </li>
-    <!--    <li>-->
-    <!--        <a {% if not request.user.id %} class="nav-link disabled" {% endif %} href="{% url 'news_add' %}">-->
-    <!--            <i class="glyphicon glyphicon-edit"></i>-->
-    <!--            Опубликовать новость</a>-->
-    <!--    </li>-->
-</ul>
-<!--<br>-->
-<!--<div class="input-group">-->
-<!--    <input type="text" class="form-control" id="search_input" placeholder="Поиск по новостям...">-->
-<!--    <span class="input-group-btn">-->
-<!--          <button class="btn btn-default" type="button">-->
-<!--            <span class="glyphicon glyphicon-search"></span>-->
-<!--          </button>-->
-<!--        </span>-->
-<!--</div>-->
-<hr>
-<ul class="nav nav-pills nav-stacked flex-sm-column fs-3">
+    <hr>
     <li class="nav-item dropdown">
         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="">
             <i class="glyphicon glyphicon-user"></i>
@@ -70,9 +54,23 @@
             <i class="glyphicon glyphicon-wrench"></i>
             Панель админа</a>
     </li>
-    <!--    <li>-->
-    <!--        <a class="nav-item" href="/404/">-->
-    <!--            <i class="glyphicon glyphicon-remove"></i>-->
-    <!--            Ошибка 404</a>-->
-    <!--    </li>-->
 </ul>
+{% comment %}
+<br>
+<div class="input-group">
+    <input type="text" class="form-control" id="search_input" placeholder="Поиск по новостям...">
+    <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+</div>
+{% endcomment %}
+{% if messages %}
+    {% for message in messages %}
+        <br>
+        <div class="alert-alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}

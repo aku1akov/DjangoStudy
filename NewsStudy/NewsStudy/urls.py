@@ -32,9 +32,11 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    urlpatterns += [
+    urlpatterns = [
         path('__debug/__', include(debug_toolbar.urls)),
-    ]
+    ] + urlpatterns
+
+    urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = 'Панель администрирования'
 admin.site.index_title = 'Портал новостей'

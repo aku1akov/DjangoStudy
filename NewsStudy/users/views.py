@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import Group
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 # Create your views here.
 
 
 def profile(request):
-    pass
+    return render(request, 'users/profile.html')
 
 
 def contact(request):
@@ -38,12 +39,20 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            login = form.cleaned_data.get('username')
-            pwd = form.cleaned_data.get('password')
-            messages.success(request, f'Пользователь {login} зарегистрирован!')
-            authenticate(username=login, password=pwd)
-            return redirect('login')
+            user = form.save()
+            category = request.POST['account_type']
+            if category == 'author':
+                group = Group.objects.get(name='ActionsRequired')
+            else:
+                group = Group.objects.get(name='Reader')
+            user.groups.add(group)
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            messages.success(request, f'Пользователь {username} зарегистрирован!')
+            Profile.objects.create(user=user, nickname=user.username)
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('news_index')
     else:
         form = UserCreationForm(request.POST)
     context = {'form': form}

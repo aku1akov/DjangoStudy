@@ -14,10 +14,20 @@
         <form method="post" class="contact-form">
             {% csrf_token %}
             {{ form|crispy }}
+            <h5>Тип аккаунта:</h5>
+            <div>
+                <input class="form-check-input" type="radio" id="author" name="account_type" value="author"/>
+                <label class="form-check-label" for="author">Автор</label>
+            </div>
+            <div>
+                <input class="form-check-input" type="radio" id="reader" name="account_type" value="reader"/>
+                <label class="form-check-label" for="author">Читатель</label>
+            </div>
             <div class="text-center">
                 <input class="btn btn-success" type="submit" value="Регистрация">
             </div>
-        </form><br>
+        </form>
+        <br>
         <div class="row">
             <div class="text-center">
                 <a href="{% url 'login' %}">У меня есть аккаунт</a>

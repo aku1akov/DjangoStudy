@@ -56,11 +56,11 @@ def news_add(request):
 
 
 def news_index(request):
-    articles = Article.objects.all().\
+    articles = Article.objects.\
         select_related('author').\
         prefetch_related('tags').\
         order_by('-date').\
-        annotate(Count('comment', distinct=True), Count('tags', distinct=True))
+        annotate(Count('comment', distinct=True), Count('tags', distinct=True)).all()
     context = {'articles': articles,
                'title': 'Все новости'}
     return render(request, 'news/index.html', context)
