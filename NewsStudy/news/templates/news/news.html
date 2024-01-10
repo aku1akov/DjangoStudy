@@ -55,6 +55,7 @@
     </div>
     <br>
     <p> {{ article.text }} </p>
+
     <div class="container-fluid">
         <div class="row justify-content-between">
             <div class="col-6">
@@ -102,6 +103,7 @@
     </form>
     {% endif %}
     <br>
+    <p>Просмотров <span class="badge"> {{ article.views.count }} </span></p>
     <p>Комментариев <span class="badge"> {{ comments.count }} </span></p><br>
 </div>
 <div class="row">
