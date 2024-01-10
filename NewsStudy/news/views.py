@@ -111,20 +111,26 @@ def news_index(request, text=None, id=None):
         q = request.POST.get('search')
         articles = articles.filter(
             Q(title__icontains=q) | Q(author__username__icontains=q) | Q(tags__title__icontains=q)).distinct()
+        title = f'По запросу найдено новостей: {articles.count()}'
         request.session['search'] = q
     elif request.session.get('search'):
         q = request.session.get('search')
         articles = articles.filter(
             Q(title__icontains=q) | Q(author__username__icontains=q) | Q(tags__title__icontains=q)).distinct()
+        title = f'По запросу найдено новостей: {articles.count()}'
+
     elif text == 'author':
         articles = articles.filter(author=id)
+        title = f'По запросу найдено новостей: {articles.count()}'
     elif text == 'tags':
         articles = articles.filter(tags=id)
+        title = f'По запросу найдено новостей: {articles.count()}'
     elif text == 'bookmark':
         id_list = []
         for el in FavoriteArticle.objects.filter(user_id=id):
             id_list.append(el.article_id)
         articles = articles.filter(id__in=id_list)
+        title = f'По запросу найдено новостей: {articles.count()}'
 
     if request.user.id:
         favorites = FavoriteArticle.objects.filter(user=request.user)
@@ -135,7 +141,6 @@ def news_index(request, text=None, id=None):
         fav_list = None
 
     a_count = len(articles)
-    title = f'По запросу найдено новостей: {a_count}'
     p = Paginator(articles, 2)
     p_number = request.GET.get('page')
     p_obj = p.get_page(p_number)
