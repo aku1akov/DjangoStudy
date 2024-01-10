@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DeleteView, UpdateView, DetailView
 from django.db.models import Count
 from django.core.paginator import Paginator
+from django.contrib import messages
 from django.contrib.auth.models import User
 import json
 
@@ -77,19 +78,23 @@ class ArticleDeleteView(DeleteView):
 
 @login_required(login_url='login')
 def news_add(request):
-    if request.method == 'POST':
-        form = ArticleForm(request.POST, request.FILES)
-        if form.is_valid():
-            article = form.save(commit=False)
-            article.author = request.user
-            article.save()
-            form.save_m2m()
-            for image in request.FILES.getlist('image_field'):
-                Image.objects.create(article=article, image=image, title=image.name)
-            return redirect('news_index')
+    if request.user.is_staff or request.user.groups.first().name == 'Author':
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, request.FILES)
+            if form.is_valid():
+                article = form.save(commit=False)
+                article.author = request.user
+                article.save()
+                form.save_m2m()
+                for image in request.FILES.getlist('image_field'):
+                    Image.objects.create(article=article, image=image, title=image.name)
+                return redirect('news_index')
+        else:
+            form = ArticleForm()
+        return render(request, 'news/add.html', {'form': form})
     else:
-        form = ArticleForm()
-    return render(request, 'news/add.html', {'form': form})
+        messages.warning(request, 'Недостаточно прав!')
+        return redirect('news_index')
 
 
 def news_index(request, text=None, id=None):
@@ -168,9 +173,17 @@ def news_detail(request, id):
     ip = get_ip(request)
     user = request.user if request.user.id else None
     ViewCount.objects.get_or_create(article=article, ip=ip, user=user)
+    if request.user.id:
+        favorites = FavoriteArticle.objects.filter(user=request.user)
+        fav_list = [0]
+        for el in favorites:
+            fav_list.append(el.article_id)
+    else:
+        fav_list = None
     context = {'article': article,
                'comments': comments,
-               'images': images}
+               'images': images,
+               'favorites': fav_list}
     if request.method == 'POST':
         print(request.POST)
         if request.user.id:

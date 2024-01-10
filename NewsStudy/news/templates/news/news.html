@@ -26,48 +26,63 @@
     <h3>{{ article.anouncement }} </h3>
     <br>
 
+    <div class="row text-center">
+        <!-- Carousel -->
+        <div class="container-fluid">
+            <div id="demo" class="carousel carousel-dark slide" data-bs-ride="carousel"
+                 style="height: 300px; width: 100vh;">
 
-    <!-- Carousel -->
-    <div class="text-center">
-        <div id="demo" class="carousel slide" data-bs-ride="carousel"
-             style="height: 300px; width: 80vh; background-color: #AAAAAA;">
-
-            <!-- The slideshow/carousel -->
-            <div class="carousel-inner">
-                {% for image in article.images.all %}
-                <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
-                    <img src="{{ image.image.url }}"
-                         style="margin:auto; height:300px; width:auto; border-radius:5px;">
+                <!-- The slideshow/carousel -->
+                <div class="carousel-inner">
+                    {% for image in article.images.all %}
+                    <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+                        <img src="{{ image.image.url }}"
+                             style="margin:auto; height:300px; width:auto; border-radius:15px;">
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                {% if article.images.count > 1 %}
+                <!-- Left and right controls/icons -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+                {% endif %}
             </div>
-
-            <!-- Left and right controls/icons -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
         </div>
     </div>
     <br>
     <p> {{ article.text }} </p>
-
-    {% for tag in article.tags.all %}
-    <td>
-        <a href="{% url 'news_search' 'tags' tag.id %}">
-            <span class="label label-success">{{ tag.title }}</span>
-        </a>
-    </td>
-    {% endfor %}
-
+    <div class="container-fluid">
+        <div class="row justify-content-between">
+            <div class="col-6">
+                {% for tag in article.tags.all %}
+                <td>
+                    <a href="{% url 'news_search' 'tags' tag.id %}">
+                        <span class="label label-success">{{ tag.title }}</span>
+                    </a>
+                </td>
+                {% endfor %}
+            </div>
+            <div class="col-6 text-end">
+                {% if favorites %}
+                <a href="{% url 'favorites' article.id %}">
+                    {% if article.id in favorites %}
+                    <button type="button" class="btn btn-danger">Из избранного</button>
+                    {% else %}
+                    <button type="button" class="btn btn-success">В избранное</button>
+                    {% endif %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
     <!--    <td>Просмотры <span class="badge">100</span></td><br>-->
     <!--    <td>Комментарии <span class="badge">2000</span></td>-->
-    {% if request.user == article.author %}
-
-
+    {% if request.user == article.author or request.user.is_staff %}
     <div class="text-center">
         <a class="btn btn-primary" href="{% url 'news_update' article.pk %}">Отредактировать</a>
         <a class="btn btn-danger" href="{% url 'news_delete' article.pk %}">Удалить</a>

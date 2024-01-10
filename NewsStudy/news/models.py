@@ -113,6 +113,7 @@ class Image(models.Model):
     def __str__(self):
         return self.title
 
+    @admin.display(description='Изображение')
     def image_tag(self):
         return mark_safe(f'<img src="{self.image.url}" height="50px" width="auto"/>')
 

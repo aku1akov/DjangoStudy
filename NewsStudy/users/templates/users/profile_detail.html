@@ -91,7 +91,7 @@
                         </ul>
                     </div>
                 </li>
-                {% if user.groups.first.name == 'Reader' %}
+                {% if user.groups.first.name == 'Reader' and request.user == user %}
                 <li class="list-group-item text-center">
                     <div>
                         Хочешь стать автором? <a href="{% url 'profile_author' %}">Нажми сюда</a>

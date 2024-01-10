@@ -27,13 +27,11 @@
 <br>
 {% for article in articles %}
 <div class="row">
-    <div class="col-sm-6 col-md-6" style="position: relative;">
+    <div class="col-6" style="position: relative;">
         <img src="{{ article.images.all.0.image.url }}"
              style="border-radius:15px;
-                    max-height: 100%;
-                    max-width: 100%;
                     width: auto;
-                    height: auto;
+                    height: 200px;
                     position: absolute;
                     top: 0;
                     bottom: 0;
@@ -41,9 +39,9 @@
                     right: 0;
                     margin: auto;">
     </div>
-    <div class="col-sm-6 col-md-6">
+    <div class="col-6">
         <h3>{{ article.title }} </h3>
-        <p> {{ article.anouncement }} </p>
+        <p> {{ article.anouncement|truncatechars:50 }} </p>
         <h6><a href="{% url 'news_detail' article.pk %}"> Читать полностью... </a></h6>
 
         {% for tag in article.tags.all %}
@@ -69,8 +67,9 @@
             Просмотров
             <span class="badge"> {{ article.views.count }} </span> |
             Комментариев
-            <span class="badge"> {{ article.comments__count }} </span> |
+            <span class="badge"> {{ article.comments__count }} </span>
             {% if favorites %}
+             |
             <a href="{% url 'favorites' article.id %}">
                 {% if article.id in favorites %}
                 <button type="button" class="btn btn-danger">Из избранного</button>

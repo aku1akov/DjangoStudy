@@ -37,7 +37,7 @@ class ArticleForm(ModelForm):
         fields = ['title', 'anouncement', 'text', 'tags']
         labels = {
             'title': 'Заголовок',
-            'tags': 'Метки',
+            'tags': 'Тэги',
         }
         widgets = {
             'title': Textarea(attrs={'rows': 1, 'placeholder': 'Заголовок статьи', 'minlength': 5, 'maxlength': 50}),

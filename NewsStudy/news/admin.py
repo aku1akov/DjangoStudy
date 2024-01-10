@@ -10,17 +10,17 @@ class ArticleCategoryFilter(admin.SimpleListFilter):
     parameter_name = 'top'
 
     def lookups(self, request, model_admin):
-        return [('V', 'Топ по просмотрам, >10'),
+        return [('V', 'Топ по просмотрам, >5'),
                 ('C', 'Топ по комментариям, >5'),
-                ('F', 'Топ избранного пользователей')]
+                ('F', 'Топ избранного, >5 раз')]
 
     def queryset(self, request, queryset):
         if self.value() == 'V':
-            return queryset.annotate(v_count=Count('views')).filter(v_count__gte=10).order_by('-date', '-v_count')
+            return queryset.annotate(v_count=Count('views')).filter(v_count__gte=6).order_by('-v_count', '-date')
         elif self.value() == 'C':
-            return queryset.annotate(c_count=Count('comments')).filter(c_count__gte=5).order_by('-date', '-c_count')
+            return queryset.annotate(c_count=Count('comments')).filter(c_count__gte=6).order_by('-c_count', '-date')
         elif self.value() == 'F':
-            return queryset
+            return queryset.annotate(f_count=Count('favorites')).filter(f_count__gte=6).order_by('-f_count', '-date')
 
 
 class ArticleLengthFilter(admin.SimpleListFilter):
@@ -77,7 +77,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['article', 'author', 'date']
-    list_filter = ['article', 'author', 'date']
+    list_filter = ['author', 'date']
 
 
 @admin.register(Image)

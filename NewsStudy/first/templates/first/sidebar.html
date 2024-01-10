@@ -24,13 +24,13 @@
     {% else %}
     <li><a class="nav-item" href="{% url 'profile' request.user.id %}">
         <i class="glyphicon glyphicon-user"></i>
-        Профиль</a>
+        Профиль | {{ request.user }}</a>
     </li>
     <li><a class="nav-item" href="{% url 'news_search' 'bookmark' request.user.id %}">
         <i class="glyphicon glyphicon-list"></i>
         Избранное</a>
     </li>
-    {% if user.groups.first.name == 'Author' %}
+    {% if user.groups.first.name == 'Author' or request.user.is_staff %}
     <li><a class="nav-item" href="{% url 'news_search' 'author' request.user.id %}">
         <i class="glyphicon glyphicon-list"></i>
         Мои новости</a>

@@ -1,5 +1,48 @@
 <div class="page-header text-center">
-    <h1>Главная страница</h1>
+    <h1>Информация для проверки</h1>
 </div>
 
-<p>Пока пусто...</p>
+<div class="fs-2">
+    Интерфейс:
+</div>
+<div>
+    <span class="text-secondary fs-5">
+    <input type="checkbox" disabled checked> Сервер запущен в режиме Debug  = False.<br>
+    <span class="text-primary fs-4"><input type="checkbox" disabled checked> Доступ в админ панель - admin/12345</span><br>
+    <input type="checkbox" disabled checked> Пользовательский фильтр для новостей в админ панели (по кол-ву просмотров/комментариев/избранному).<br>
+    <input type="checkbox" disabled checked> Пользовательские действия для пользователей в админ панели (изменение роли пользователя).<br>
+    </span>
+</div>
+<br>
+
+<div class="fs-2">
+    Проверка пользователей:
+</div>
+<div>
+    <span class="text-secondary fs-5">
+    <input type="checkbox" disabled checked> При регистрации валидация по длине имени пользователя.<br>
+    <input type="checkbox" disabled checked> Автоматическая аутентификация после регистрации.<br>
+    <span class="text-primary fs-4"><input type="checkbox" disabled checked> Регистрация ВСЕГДА с правами читателя! Запрос на повышение прав по отдельной ссылке внутри профиля.</span><br>
+    <input type="checkbox" disabled checked> При редактировании профиля производится валидация полей для email и телефона.<br>
+    <input type="checkbox" disabled checked> Доступ к избранному, а также к своим статьям по ссылкам в боковом меню, либо через профиль в разделе статистики.<br>
+    <input type="checkbox" disabled checked> Пагинация корректно работает для избранного и новостей автора. Сброс фильтров по новостям через боковое меню "Все новости".<br>
+    </span>
+</div>
+<br>
+
+<div class="fs-2">
+    Проверка новостей:
+</div>
+<div>
+    <span class="text-secondary fs-5">
+    <input type="checkbox" disabled checked> При создании новости валидация по длине заголовка, аннотации, текста.<br>
+    <input type="checkbox" disabled checked> Реализована возможность привязки нескольких изображений к новости.<br>
+    <span class="text-primary fs-4"><input type="checkbox" disabled checked> Новости с несколькими изображениями для проверки карусели:
+        <a href="{% url 'news_detail' 58 %}">тут</a> и
+        <a href="{% url 'news_detail' 54 %}">здесь</a>.</span><br>
+    <input type="checkbox" disabled checked> Реализована функция редактирования новости для автора и администраторов.<br>
+    <input type="checkbox" disabled checked> Фильтр реализован через поле поиска с автозаполнением на странице "Все новости", который позволяет искать по заголовку, автору или тегу.<br>
+    <input type="checkbox" disabled checked> Пагинация корректно работает. Сброс фильтров через боковое меню "Все новости".<br>
+    </span>
+</div>
+<br>
