@@ -93,7 +93,6 @@ def news_add(request):
 
 
 def news_index(request, text=None, id=None):
-    print(text, id)
     if request.session.get('search') and request.build_absolute_uri().endswith('news/'):
         del request.session['search']
     title = 'Все новости'

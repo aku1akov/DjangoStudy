@@ -39,7 +39,7 @@ class Article(models.Model):
     anouncement = models.TextField('Аннотация', max_length=250)
     text = models.TextField('Текст новости')
     date = models.DateTimeField('Дата создания', auto_now=True)
-    category = models.CharField(choices=categories, max_length=20, verbose_name='Категория')
+    # category = models.CharField(choices=categories, max_length=20, verbose_name='Категория')
     tags = models.ManyToManyField(verbose_name='Тэги', to=Tag, blank=True)
     slug = models.SlugField()
 
