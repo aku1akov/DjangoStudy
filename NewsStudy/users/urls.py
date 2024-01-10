@@ -19,9 +19,13 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('', views.users_index, name='users_index'),
     path('contact', views.contact, name='contact'),
-    path('profile', views.profile, name='profile'),
+    path('profile/<int:id>', views.profile_detail, name='profile'),
+    path('profile/author', views.profile_author, name='profile_author'),
+    path('favorites/<int:id>', views.profile_favorites, name='favorites'),
+    path('profile/update', views.profile_update, name='profile_update'),
+    path('profile/password', views.password_update, name='password_update'),
+    path('profile/delete', views.profile_delete, name='profile_delete'),
     path('register', views.register, name='register'),
     path('login', auth_views.LoginView.as_view(
         template_name='users/login.html'), name='login'),

@@ -6,6 +6,6 @@ def allowed_email(email):
     domains = ['@rt.ru', '@nw.rt.ru']
     if not any(domain in email for domain in domains):
         raise ValidationError(
-            _('%(email) has not allowed domain'),
-            params={'email': email}
+            ('Указан некорректный домен для Email'),
+            # params={'email': email}
         )

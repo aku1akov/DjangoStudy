@@ -11,6 +11,7 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
+        {{ image_form|crispy }}
         {% comment %}
         {{ form.title|as_crispy_field }}
         {{ form.anouncement|as_crispy_field }}
@@ -19,7 +20,7 @@
         {{ form.image_field|as_crispy_field }}
         {% endcomment %}
         <div class="text-center">
-            <input type="submit" class="btn btn-success" value="Опубликовать">
+            <input type="submit" class="btn btn-primary" value="Опубликовать">
         </div>
     </form>
 </div>

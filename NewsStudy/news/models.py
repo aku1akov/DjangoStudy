@@ -39,7 +39,7 @@ class Article(models.Model):
     anouncement = models.TextField('Аннотация', max_length=250)
     text = models.TextField('Текст новости')
     date = models.DateTimeField('Дата создания', auto_now=True)
-    category = models.CharField(choices=categories, max_length=20, verbose_name='Категории')
+    category = models.CharField(choices=categories, max_length=20, verbose_name='Категория')
     tags = models.ManyToManyField(verbose_name='Тэги', to=Tag, blank=True)
     slug = models.SlugField()
 
@@ -64,12 +64,25 @@ class Article(models.Model):
             s += t.title + ' '
         return s
 
+    @admin.display(description='Изображение')
     def image_tag(self):
         image = Image.objects.filter(article=self).first()
         if image:
             return mark_safe(f'<img src="{image.image.url}" height="50px" width="auto"/>')
         else:
             return f'no image'
+
+    @admin.display(description='Просмотров')
+    def views_count(self):
+        return self.views.count()
+
+    @admin.display(description='Комментариев')
+    def comments_count(self):
+        return self.comments.count()
+
+    @admin.display(description='Изображений')
+    def images_count(self):
+        return self.images.count()
 
     class Meta:
         ordering = ['title', 'date']
@@ -79,7 +92,7 @@ class Article(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=False)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=False, related_name='comments')
     text = models.TextField('Текст комментария')
     date = models.DateTimeField('Время создания', auto_now_add=True)
 
@@ -93,7 +106,7 @@ class Comment(models.Model):
 
 
 class Image(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='images')
     title = models.CharField(max_length=50, blank=True, verbose_name='Название')
     image = models.ImageField(upload_to='news_img', verbose_name='Изображение')
 
@@ -107,3 +120,19 @@ class Image(models.Model):
         ordering = ['article', 'title']
         verbose_name = 'Изображение'
         verbose_name_plural = 'Изображения'
+
+
+class ViewCount(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='views', verbose_name='Новость')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', null=True)
+    ip = models.GenericIPAddressField(verbose_name='IP адрес')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+
+    def __str__(self):
+        return self.article.title
+
+    class Meta:
+        ordering = ['-date']
+        indexes = [models.Index(fields=['-date'])]
+        verbose_name = 'Просмотр'
+        verbose_name_plural = 'Просмотры'

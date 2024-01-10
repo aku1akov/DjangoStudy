@@ -13,6 +13,39 @@
             Все новости</a>
     </li>
     <hr>
+
+    {% if not request.user.id %}
+    <li><a class="nav-item" href="{% url 'register' %}">
+        <i class="glyphicon glyphicon-check"></i>
+        Регистрация</a></li>
+    <li><a class="nav-item" href="{% url 'login' %}">
+        <i class="glyphicon glyphicon-log-in"></i>
+        Войти</a></li>
+    {% else %}
+    <li><a class="nav-item" href="{% url 'profile' request.user.id %}">
+        <i class="glyphicon glyphicon-user"></i>
+        Профиль</a>
+    </li>
+    <li><a class="nav-item" href="{% url 'news_search' 'bookmark' request.user.id %}">
+        <i class="glyphicon glyphicon-list"></i>
+        Избранное</a>
+    </li>
+    {% if user.groups.first.name == 'Author' %}
+    <li><a class="nav-item" href="{% url 'news_search' 'author' request.user.id %}">
+        <i class="glyphicon glyphicon-list"></i>
+        Мои новости</a>
+    </li>
+    <li><a class="nav-item" href="{% url 'news_add' %}">
+        <i class="glyphicon glyphicon-edit"></i>
+        Опубликовать новость</a>
+    </li>
+    {% endif %}
+    <li><a class="nav-item" href="{% url 'logout' %}">
+        <i class="glyphicon glyphicon-log-out"></i>
+        Выйти</a>
+    </li>
+    {% endif %}
+    {% comment %}
     <li class="nav-item dropdown">
         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="">
             <i class="glyphicon glyphicon-user"></i>
@@ -33,15 +66,24 @@
         </ul>
         {% else %}
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'news_user' %}">
+            <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">
+                <i class="glyphicon glyphicon-user"></i>
+                Профиль</a>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'news_search' 'bookmark' request.user.id %}">
+                <i class="glyphicon glyphicon-list"></i>
+                Избранное</a>
+            </li>
+            {% if user.groups.first.name == 'Author' %}
+            <li><a class="dropdown-item" href="{% url 'news_search' 'author' request.user.id %}">
                 <i class="glyphicon glyphicon-list"></i>
                 Мои новости</a>
             </li>
-            <li>
-                <a class="dropdown-item" href="{% url 'news_add' %}">
-                    <i class="glyphicon glyphicon-edit"></i>
-                    Опубликовать новость</a>
+            <li><a class="dropdown-item" href="{% url 'news_add' %}">
+                <i class="glyphicon glyphicon-edit"></i>
+                Опубликовать новость</a>
             </li>
+            {% endif %}
             <li><a class="dropdown-item" href="{% url 'logout' %}">
                 <i class="glyphicon glyphicon-log-out"></i>
                 Выйти</a>
@@ -49,8 +91,10 @@
         </ul>
         {% endif %}
     </li>
+    {% endcomment %}
+    <hr>
     <li>
-        <a {% if request.user.id != 1 %} class="nav-link disabled" {% endif %} href="/admin/">
+        <a {% if not request.user.is_staff %} class="nav-link disabled" {% endif %} href="/admin/">
             <i class="glyphicon glyphicon-wrench"></i>
             Панель админа</a>
     </li>
@@ -67,10 +111,10 @@
 </div>
 {% endcomment %}
 {% if messages %}
-    {% for message in messages %}
-        <br>
-        <div class="alert-alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
+{% for message in messages %}
+<br>
+<div class="text-center alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
 {% endif %}

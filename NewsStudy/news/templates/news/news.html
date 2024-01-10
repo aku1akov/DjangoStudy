@@ -11,90 +11,100 @@
 
 <div>
     <div class="row">
-        <div class="col-6 text-start">
+        <div class="text-start">
             <h5>
-                {% comment %} {{ article.author.profile.nickname }} {% endcomment %}
-                <span class="glyphicon glyphicon-time"></span> Опубликовал(а) {{ article.author }} {{ article.date }}.
+                <span class="glyphicon glyphicon-time"></span>
+                {% if article.author %}
+                Опубликовал(а) <a href="{% url 'profile' article.author.id %}">{{ article.author }}</a>
+                {% else %}
+                Опубликовано
+                {% endif %}
+                {{ article.date }}
             </h5>
-        </div>
-        <div class="col-6 text-end">
-            {% if request.user == article.author %}
-            <td>
-                <a href="{% url 'news_update' article.pk %}"><i class="glyphicon glyphicon-pencil"></i></a>
-            </td>
-            <td>
-                <a href="{% url 'news_delete' article.pk %}"><i class="glyphicon glyphicon-remove"></i></a>
-            </td>
-            {% endif %}
         </div>
     </div>
     <h3>{{ article.anouncement }} </h3>
     <br>
 
+
     <!-- Carousel -->
-    <div id="demo" class="carousel slide" data-bs-ride="carousel" style="height: 200px; width: auto;">
+    <div class="text-center">
+        <div id="demo" class="carousel slide" data-bs-ride="carousel"
+             style="height: 300px; width: 80vh; background-color: #AAAAAA;">
 
-        <!-- Indicators/dots -->
-        {% comment %}
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-        </div>
-        {% endcomment %}
-        <!-- The slideshow/carousel -->
-        <div class="carousel-inner">
-            {% for image in images %}
-            <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
-                <img src="{{ image.image.url }}" class="d-block w-100">
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+                {% for image in article.images.all %}
+                <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+                    <img src="{{ image.image.url }}"
+                         style="margin:auto; height:300px; width:auto; border-radius:5px;">
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
 
-        <!-- Left and right controls/icons -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
+            <!-- Left and right controls/icons -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
     </div>
     <br>
-
     <p> {{ article.text }} </p>
 
     {% for tag in article.tags.all %}
-    <td><span class="label label-success text">{{ tag.title }}</span></td>
+    <td>
+        <a href="{% url 'news_search' 'tags' tag.id %}">
+            <span class="label label-success">{{ tag.title }}</span>
+        </a>
+    </td>
     {% endfor %}
 
 
     <!--    <td>Просмотры <span class="badge">100</span></td><br>-->
     <!--    <td>Комментарии <span class="badge">2000</span></td>-->
+    {% if request.user == article.author %}
 
+
+    <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'news_update' article.pk %}">Отредактировать</a>
+        <a class="btn btn-danger" href="{% url 'news_delete' article.pk %}">Удалить</a>
+    </div>
+    {% endif %}
     <hr>
+    {% if request.user.id %}
     <h4>Добавить комментарий:</h4>
     <form role="form" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <textarea class="form-control" rows="2" required name="text"></textarea>
+            <textarea class="form-control" rows="2" required name="text" minlength="10"></textarea>
         </div>
         <div class="text-center">
-            <button type="submit" class="btn btn-success">Опубликовать</button>
+            <button type="submit" class="btn btn-primary">Опубликовать</button>
         </div>
     </form>
+    {% endif %}
     <br>
     <p>Комментариев <span class="badge"> {{ comments.count }} </span></p><br>
-
-    <div class="row">
-        <div class="col-sm-10 offset-2">
-            {% for comment in comments %}
-            <h4> {{ comment.author }} <small> {{ comment.date }} </small></h4>
-            <p> {{ comment.text }} </p>
-
-            <br>
-            {% endfor %}
-        </div>
-    </div>
 </div>
+<div class="row">
+    {% for comment in comments %}
+
+    <div class="col-sm-2 text-end">
+        <img src="{{ comment.author.profile.image.url }}" class="img-circle" height="65" width="65"
+             alt="Profile image">
+    </div>
+    <div class="col-sm-10">
+        <h4>
+            <a href="{% url 'profile' comment.author.id %}">{{ comment.author }}</a>
+            <small> {{ comment.date }} </small></h4>
+        <p> {{ comment.text }} </p><br>
+    </div>
+
+    {% endfor %}
+</div>
+
 
 {% endblock %}

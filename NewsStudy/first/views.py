@@ -4,11 +4,12 @@ from news.models import Article
 
 
 def index(request):
+    print('!!!!')
     articles = Article.today.all(). \
         select_related('author'). \
         prefetch_related('tags'). \
         order_by('-date'). \
-        annotate(Count('comment', distinct=True), Count('tags', distinct=True))
+        annotate(Count('comments', distinct=True))
     context = {'articles': articles,
                'title': 'Новости дня'}
     # return render(request, 'first/index.html')

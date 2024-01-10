@@ -5,6 +5,24 @@ from .models import *
 # Register your models here.
 
 
+class ArticleCategoryFilter(admin.SimpleListFilter):
+    title = 'По категориям'
+    parameter_name = 'top'
+
+    def lookups(self, request, model_admin):
+        return [('V', 'Топ по просмотрам, >10'),
+                ('C', 'Топ по комментариям, >5'),
+                ('F', 'Топ избранного пользователей')]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'V':
+            return queryset.annotate(v_count=Count('views')).filter(v_count__gte=10).order_by('-date', '-v_count')
+        elif self.value() == 'C':
+            return queryset.annotate(c_count=Count('comments')).filter(c_count__gte=5).order_by('-date', '-c_count')
+        elif self.value() == 'F':
+            return queryset
+
+
 class ArticleLengthFilter(admin.SimpleListFilter):
     title = 'По длине новости'
     parameter_name = 'text'
@@ -24,9 +42,6 @@ class ArticleLengthFilter(admin.SimpleListFilter):
             return queryset.annotate(text_len=Length('text')).filter(text_len__gt=500)
 
 
-
-
-
 class ArticleImageInline(admin.TabularInline):
     model = Image
     extra = 1
@@ -35,8 +50,13 @@ class ArticleImageInline(admin.TabularInline):
 
 class ArticleAdmin(admin.ModelAdmin):
     ordering = ['-date', 'title', 'author']
-    list_display = ['title', 'author', 'date', 'comment_count', 'text_length', 'tag_list', 'image_tag']
-    list_filter = ['author', 'date', ArticleLengthFilter]
+    list_display = ['title', 'author', 'date',
+                    'text_length',
+                    'views_count',
+                    'comments_count',
+                    # 'images_count',
+                    'image_tag']
+    list_filter = [ArticleLengthFilter, ArticleCategoryFilter]
     search_fields = ['title', 'tags__title']
     # list_display_links = ['date']
     # list_editable = ['author']
@@ -50,13 +70,9 @@ class ArticleAdmin(admin.ModelAdmin):
     def text_length(self, article: Article):
         return len(article.text)
 
-    @admin.display(description='Комментариев', ordering='com_count')
-    def comment_count(self, article: Article):
-        return article.com_count
-
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        return queryset.annotate(symbols_count=Length('text'), com_count=Count('comment'))
+        return queryset.annotate(symbols_count=Length('text'))
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -67,6 +83,11 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ['title', 'article', 'image_tag']
+
+
+@admin.register(ViewCount)
+class ViewCountAdmin(admin.ModelAdmin):
+    list_display = ['article', 'user', 'ip', 'date']
 
 
 @admin.register(Tag)

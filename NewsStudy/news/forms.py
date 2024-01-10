@@ -1,7 +1,7 @@
 from django import forms
-from django.core.validators import MinValueValidator
-from django.forms import ModelForm, Textarea, CheckboxSelectMultiple
-from .models import Article
+from django.forms import ModelForm, Textarea, CheckboxSelectMultiple, inlineformset_factory
+from .models import *
+
 from django.utils.translation import gettext_lazy as _
 
 
@@ -23,19 +23,25 @@ class MultipleFileField(forms.FileField):
         return result
 
 
+ImagesFormSet = inlineformset_factory(Article, Image,
+                                      fields=('image',),
+                                      extra=1, max_num=3,
+                                      widgets={'image_field': MultipleFileField(required=True)})
+
+
 class ArticleForm(ModelForm):
-    image_field = MultipleFileField()
+    image_field = MultipleFileField(label='Изображения')
 
     class Meta:
         model = Article
         fields = ['title', 'anouncement', 'text', 'tags']
         labels = {
-            "title": _("Заголовок"),
-            "tags": _("Метки"),
+            'title': 'Заголовок',
+            'tags': 'Метки',
         }
         widgets = {
-            'title': Textarea(attrs={'rows': 1, 'placeholder': 'Заголовок статьи'}),
-            'anouncement': Textarea(attrs={'rows': 1, 'placeholder': 'Анонс статьи'}),
-            'text': Textarea(attrs={'rows': 3, 'placeholder': 'Основной текст статьи'}),
-            'tags': CheckboxSelectMultiple(),
+            'title': Textarea(attrs={'rows': 1, 'placeholder': 'Заголовок статьи', 'minlength': 5, 'maxlength': 50}),
+            'anouncement': Textarea(attrs={'rows': 1, 'placeholder': 'Анонс статьи', 'minlength': 10, 'maxlength': 250}),
+            'text': Textarea(attrs={'rows': 3, 'placeholder': 'Основной текст статьи', 'minlength': 10}),
+            'tags': CheckboxSelectMultiple()
         }
